@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -18,4 +19,5 @@ public class Person {
 
     private String firstName;
     private String lastName;
+    private Date regDate;
 }
