@@ -11,7 +11,6 @@ import javax.validation.Valid;
 @RestController
 public class restController {
 
-
     @PostMapping("/persons/")
     public String checkPersonInfo(@Valid Person person, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {

@@ -109,56 +109,16 @@
 <!-- page script -->
 <script>
     $(function () {
-        var tabCol = [
-            { "data": "id" },
-            { "data": "id" },
-            { "data": "firstName" },
-            { "data": "lastName" },
-            { "data": "regDate" }
-        ];
-
         var dataTab = $('#dataTab').DataTable({
             "processing": true,
             "serverSide": true,
-            "order": [1, "desc"],
-            "columns": tabCol,
-            "columnDefs": [{
-                "targets": 0,
-                "data": "id",
-                "orderable": false,
-                "render": function(data) {
-                    return '<input type="checkbox" id="chk_'+data+'"/>';
-                }
-            }],
             "initComplete": function() {
                 $('#dataTab_filter input').unbind().bind('keyup', function(e) {
                     if(e.keyCode == 13)
                         dataTab.search(this.value).draw();
                 });
             },
-            "ajax": {
-                "url": "/api/persons/search/findByFilter",
-                "data": function(param) {
-                    param.size = param.length;
-                    param.page = param.start/param.length;
-                    param.sort = tabCol[param.order[0].column].data+","+param.order[0].dir;
-                    param.keyword = param.search.value;
-                },
-                "dataFilter": function(data){
-                    var json = $.parseJSON(data);
-                    json.recordsTotal = json.page.totalElements;
-                    json.recordsFiltered = json.page.totalElements;
-
-                    var idx = 0;
-                    json._embedded.persons.forEach(function(item){
-                        var idArr = item._links.self.href.split("/");
-                        json._embedded.persons[idx++].id = idArr[idArr.length-1];
-                    });
-
-                    json.data = json._embedded.persons;
-                    return JSON.stringify(json);
-                }
-            }
+            "ajax": "/api2/persons/findByFilter"
         });
 
         $("#dataTab tbody").on('click','tr', function(){

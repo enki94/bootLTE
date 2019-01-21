@@ -32,6 +32,11 @@ public class webController {
         return "datatable";
     }
 
+    @RequestMapping("/data2.html")
+    public String datatable2() {
+        return "datatable2";
+    }
+
     @RequestMapping("/hello")
     public String hello(Model model, @RequestParam(value = "name", defaultValue = "Unknown", required = false) String name) {
         String greetings = "Hello, " + name + "!";
