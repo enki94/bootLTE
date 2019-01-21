@@ -27,7 +27,7 @@ public class webController {
         return "dashboard";
     }
 
-    @RequestMapping("/datatable")
+    @RequestMapping("/data.html")
     public String datatable() {
         return "datatable";
     }

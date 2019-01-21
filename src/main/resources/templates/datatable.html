@@ -29,10 +29,8 @@
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-sm" id="btnDel">
                                     <i class="fa fa-trash-o"></i> Delete</button>
-                                <button type="button" class="btn btn-default btn-sm" id="btnEdt" data-toggle="modal" data-target="#modal-default">
-                                    <i class="fa fa-edit"></i> Edit</button>
                                 <button type="button" class="btn btn-default btn-sm" id="btnNew" data-toggle="modal" data-target="#modal-default">
-                                    <i class="fa fa-sticky-note-o"></i> New</button>
+                                    <i class="fa fa-edit"></i> New</button>
                             </div>
                         </div>
                         <!-- /.box-header -->
@@ -41,7 +39,7 @@
                                 <thead>
                                 <tr>
                                     <th><input type="checkbox" id="chkAll"/></th>
-                                    <th>No</th>
+                                    <th>Id</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Reg Date</th>
@@ -70,17 +68,18 @@
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal" id="frm">
+                            <input type="hidden" name="id" value=""/>
                             <div class="box-body">
                                 <div class="form-group">
-                                    <label for="firstname" class="col-sm-3 control-label">First Name</label>
+                                    <label for="firstName" class="col-sm-3 control-label">First Name</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="firstname" placeholder="First Name">
+                                        <input type="text" class="form-control" id="firstName" placeholder="First Name">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="lastname" class="col-sm-3 control-label">Last Name</label>
+                                    <label for="lastName" class="col-sm-3 control-label">Last Name</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="lastname" placeholder="Last Name">
+                                        <input type="text" class="form-control" id="lastName" placeholder="Last Name">
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +110,7 @@
 <script>
     $(function () {
         var tabCol = [
-            { "data": ""},
+            { "data": "id"},
             { "data": "id"},
             { "data": "firstName" },
             { "data": "lastName" },
@@ -127,8 +126,8 @@
                 "targets": 0,
                 "data": "id",
                 "orderable": false,
-                "render": function(data, type, row, meta) {
-                    return '<input type="checkbox" id="chkDel_'+data+'"/>';
+                "render": function(data) {
+                    return '<input type="checkbox" id="chk_'+data+'"/>';
                 }
             }],
             "initComplete": function() {
@@ -162,17 +161,66 @@
             }
         });
 
+        $("#dataTab tbody").on('click','tr', function(){
+            $("#frm")[0].reset();
+           var editId = $(this).find("td").eq(1).text();
+            $("input[name=id]").val(editId);
+            $.ajax({
+                url: '/api/persons/'+editId,
+                type: 'GET',
+                success: function(d) {
+                    $("#firstName").val(d.firstName);
+                    $("#lastName").val(d.lastName);
+                    $('#modal-default').modal('show');
+                }
+            });
+        });
+
         $("#chkAll").click(function(){
-            $("input[id^=chkDel]").prop("checked",$(this).is(":checked"));
+            $("input[id^=chk]").prop("checked",$(this).is(":checked"));
         });
 
         $("#btnNew").click(function(){
             $("#frm")[0].reset();
         });
 
+        $("#btnDel").click(function(){
+            if(confirm('Are you sure you want to delete it?')) {
+                $.each($("input[id^=chk_]"),function(){
+                    if($(this).is(":checked")) {
+                        var delId = $(this).attr("id").replace("chk_","");
+                        $.ajax({
+                            url: '/api/persons/'+delId,
+                            type: 'DELETE'
+                        });
+                    }
+                });
+                dataTab.draw();
+            }
+        });
+
         $("#btnSave").click(function(){
-            //http://localhost:8080/api/persons
-            //$.ajax()
+            var editId = $("input[name=id]").val();
+            var ajaxType = (editId=="")?"POST":"PUT";
+            var ajaxUrl = "/api/persons/";
+            var formData = {
+                firstName: $("#firstName").val(),
+                lastName: $("#lastName").val()
+            };
+            if(ajaxType=="PUT")
+                ajaxUrl += editId
+            $.ajax({
+                url: ajaxUrl,
+                type: ajaxType,
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(formData),
+                success: function() {
+                    alert("Success!");
+                    $("button[data-dismiss=modal]").click();
+                    dataTab.draw();
+                }
+            });
         });
     });
 </script>
