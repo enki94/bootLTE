@@ -1,20 +1,19 @@
 package io.devwin.boot.rest;
 
-import io.devwin.boot.model.Datatable;
 import io.devwin.boot.model.Person;
 import io.devwin.boot.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,21 +23,36 @@ public class personRestController {
     @Autowired
     PersonRepository personRepository;
 
-    @GetMapping("/findByFilter")
-    public Page<Person> list(HttpServletRequest request) {
-        //Pageable pageable = null;
-        //pageable.
-        //Map<String, Object> retMap = new HashMap<>();
+    @PostMapping("/")
+    public Map<String, Object> insert(@Valid Person person, BindingResult bindingResult) {
+        return save(person, bindingResult);
+    }
 
-        //System.out.println(datatable.getDraw());
-        //System.out.println(datatable.getColumns()[0]["data"]);
-        String[] param = request.getParameterValues("columns");
-        System.out.println(param.toString());
+    @PutMapping("/{id}")
+    public Map<String, Object> update(@Valid Person person, BindingResult bindingResult) {
+        return save(person, bindingResult);
+    }
 
-        //Page<Person> retMap = personRepository.findByFilter(keyword, pageable);
-        Page<Person> retMap = null;
+    public Map<String, Object> save(@Valid Person person, BindingResult bindingResult) {
+        Map<String, Object> map = new HashMap<>();
+        List errList = new ArrayList();
 
-        return retMap;
+        if(bindingResult.hasErrors()) {
+            List<FieldError> list = bindingResult.getFieldErrors();
+            for(FieldError err:list) {
+                Map<String, Object> mapErr = new HashMap<>();
+                mapErr.put("field",err.getField());
+                mapErr.put("message",err.getDefaultMessage());
+                errList.add(mapErr);
+            }
+
+            map.put("status", "ERROR");
+            map.put("error", errList);
+        } else {
+            personRepository.save(person);
+            map.put("status", "OK");
+        }
+        return map;
     }
 
 }

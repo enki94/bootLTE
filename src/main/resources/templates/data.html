@@ -68,19 +68,20 @@
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal" id="frm">
-                            <input type="hidden" name="id" value=""/>
                             <div class="box-body">
                                 <div class="form-group">
                                     <label for="firstName" class="col-sm-3 control-label">First Name</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                                        <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name">
                                     </div>
+                                    <div class="col-sm-12 text-right" id="firstNameErrMsg"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="lastName" class="col-sm-3 control-label">Last Name</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                                        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name">
                                     </div>
+                                    <div class="col-sm-12 text-right" id="lastNameErrMsg"></div>
                                 </div>
                             </div>
                             <!-- /.box-body -->
@@ -109,21 +110,64 @@
 <!-- page script -->
 <script>
     $(function () {
+        var tabCol = [
+            { "data": "id" },
+            { "data": "id" },
+            { "data": "firstName" },
+            { "data": "lastName" },
+            { "data": "regDate" }
+        ];
+
         var dataTab = $('#dataTab').DataTable({
             "processing": true,
             "serverSide": true,
+            "order": [1, "desc"],
+            "columns": tabCol,
+            "columnDefs": [{
+                "targets": 0,
+                "data": "id",
+                "orderable": false,
+                "render": function(data) {
+                    return '<input type="checkbox" id="chk_'+data+'"/>';
+                }
+            }],
             "initComplete": function() {
                 $('#dataTab_filter input').unbind().bind('keyup', function(e) {
                     if(e.keyCode == 13)
                         dataTab.search(this.value).draw();
                 });
             },
-            "ajax": "/api2/persons/findByFilter"
+            "ajax": {
+                "url": "/api/persons/search/findByFilter",
+                "data": function(param) {
+                    param.size = param.length;
+                    param.page = param.start/param.length;
+                    param.sort = tabCol[param.order[0].column].data+","+param.order[0].dir;
+                    param.keyword = param.search.value;
+                },
+                "dataFilter": function(data){
+                    var json = $.parseJSON(data);
+                    json.recordsTotal = json.page.totalElements;
+                    json.recordsFiltered = json.page.totalElements;
+
+                    var idx = 0;
+                    json._embedded.persons.forEach(function(item){
+                        var idArr = item._links.self.href.split("/");
+                        json._embedded.persons[idx++].id = idArr[idArr.length-1];
+                    });
+
+                    json.data = json._embedded.persons;
+                    return JSON.stringify(json);
+                }
+            }
         });
 
+        var editId = "";
         $("#dataTab tbody").on('click','tr', function(){
             $("#frm")[0].reset();
-           var editId = $(this).find("td").eq(1).text();
+            $("div[id$=ErrMsg]").text("");
+            $(".form-group").removeClass("has-error");
+            editId = $(this).find("td").eq(1).text();
             $("input[name=id]").val(editId);
             $.ajax({
                 url: '/api/persons/'+editId,
@@ -141,7 +185,10 @@
         });
 
         $("#btnNew").click(function(){
+            editId = "";
             $("#frm")[0].reset();
+            $("div[id$=ErrMsg]").text("");
+            $(".form-group").removeClass("has-error");
         });
 
         $("#btnDel").click(function(){
@@ -160,25 +207,27 @@
         });
 
         $("#btnSave").click(function(){
-            var editId = $("input[name=id]").val();
+            $("div[id$=ErrMsg]").text("");
+            $(".form-group").removeClass("has-error");
             var ajaxType = (editId=="")?"POST":"PUT";
-            var ajaxUrl = "/api/persons/";
-            var formData = {
-                firstName: $("#firstName").val(),
-                lastName: $("#lastName").val()
-            };
+            var ajaxUrl = "/api2/persons/";
             if(ajaxType=="PUT")
                 ajaxUrl += editId
             $.ajax({
                 url: ajaxUrl,
                 type: ajaxType,
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(formData),
-                success: function() {
-                    alert("Success!");
-                    $("button[data-dismiss=modal]").click();
-                    dataTab.draw();
+                data: $("#frm").serialize(),
+                success: function(d) {
+                    if(d.status=="OK") {
+                        alert("Success!");
+                        $("button[data-dismiss=modal]").click();
+                        dataTab.draw();
+                    } else {
+                        $.each(d.error,function(i,item){
+                            $("#"+item.field+"ErrMsg").text(item.message);
+                            $("#"+item.field+"ErrMsg").parent().addClass("has-error");
+                        });
+                    }
                 }
             });
         });

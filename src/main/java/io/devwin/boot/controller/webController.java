@@ -29,12 +29,7 @@ public class webController {
 
     @RequestMapping("/data.html")
     public String datatable() {
-        return "datatable";
-    }
-
-    @RequestMapping("/data2.html")
-    public String datatable2() {
-        return "datatable2";
+        return "data";
     }
 
     @RequestMapping("/hello")

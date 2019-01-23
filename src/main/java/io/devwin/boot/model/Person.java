@@ -17,11 +17,11 @@ public class Person {
     private long id;
 
     @NotNull
-    @Size(min=2, message="First Name should have atleast 2 characters")
+    @Size(min=2)
     private String firstName;
 
     @NotNull
-    @Size(min=2, message="Last Name should have atleast 2 characters")
+    @Size(min=2)
     private String lastName;
 
     @Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
