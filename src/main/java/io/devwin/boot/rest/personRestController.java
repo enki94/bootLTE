@@ -2,6 +2,7 @@ package io.devwin.boot.rest;
 
 import io.devwin.boot.model.Person;
 import io.devwin.boot.repository.PersonRepository;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;

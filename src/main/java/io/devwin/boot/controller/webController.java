@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class webController {
     @RequestMapping("/")
@@ -13,7 +15,9 @@ public class webController {
     }
 
     @RequestMapping("/login")
-    public String login() {
+    public String login(HttpServletRequest req) {
+        String referer = req.getHeader("Referer");
+        req.getSession().setAttribute("prevPage", referer);
         return "login";
     }
 
