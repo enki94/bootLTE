@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: head">
-</head>
+<head th:replace="fragments/header :: head"></head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-    <th:block th:include="fragments/top"></th:block>
-    <th:block th:include="fragments/leftMenu"></th:block>
+    <th:block th:include="fragments/top"/>
+    <th:block th:include="fragments/leftMenu"/>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1> Person <small>advanced tables</small></h1>
+            <h1> Data tables <small>advanced tables</small></h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li><a href="#">Tables</a></li>
@@ -100,138 +99,136 @@
     </div>
     <!-- /.content-wrapper -->
 
-    <th:block th:include="fragments/bottom"></th:block>
-    <th:block th:include="fragments/controlSidebar"></th:block>
+    <th:block th:include="fragments/bottom"/>
 </div>
 <!-- ./wrapper -->
 
-<th:block th:include="fragments/script"></th:block>
-
+<th:block th:include="fragments/script"/>
 <!-- page script -->
 <script>
-    $(function () {
-        var tabCol = [
-            { "data": "id" },
-            { "data": "id" },
-            { "data": "firstName" },
-            { "data": "lastName" },
-            { "data": "regDate" }
-        ];
+$(function () {
+    var tabCol = [
+        { "data": "id" },
+        { "data": "id" },
+        { "data": "firstName" },
+        { "data": "lastName" },
+        { "data": "regDate" }
+    ];
 
-        var dataTab = $('#dataTab').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "order": [1, "desc"],
-            "columns": tabCol,
-            "columnDefs": [{
-                "targets": 0,
-                "data": "id",
-                "orderable": false,
-                "render": function(data) {
-                    return '<input type="checkbox" id="chk_'+data+'"/>';
-                }
-            }],
-            "initComplete": function() {
-                $('#dataTab_filter input').unbind().bind('keyup', function(e) {
-                    if(e.keyCode == 13)
-                        dataTab.search(this.value).draw();
-                });
+    var dataTab = $('#dataTab').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "order": [1, "desc"],
+        "columns": tabCol,
+        "columnDefs": [{
+            "targets": 0,
+            "data": "id",
+            "orderable": false,
+            "render": function(data) {
+                return '<input type="checkbox" id="chk_'+data+'"/>';
+            }
+        }],
+        "initComplete": function() {
+            $('#dataTab_filter input').unbind().bind('keyup', function(e) {
+                if(e.keyCode == 13)
+                    dataTab.search(this.value).draw();
+            });
+        },
+        "ajax": {
+            "url": "/api/persons/search/findByFilter",
+            "data": function(param) {
+                param.size = param.length;
+                param.page = param.start/param.length;
+                param.sort = tabCol[param.order[0].column].data+","+param.order[0].dir;
+                param.keyword = param.search.value;
             },
-            "ajax": {
-                "url": "/api/persons/search/findByFilter",
-                "data": function(param) {
-                    param.size = param.length;
-                    param.page = param.start/param.length;
-                    param.sort = tabCol[param.order[0].column].data+","+param.order[0].dir;
-                    param.keyword = param.search.value;
-                },
-                "dataFilter": function(data){
-                    var json = $.parseJSON(data);
-                    json.recordsTotal = json.page.totalElements;
-                    json.recordsFiltered = json.page.totalElements;
+            "dataFilter": function(data){
+                var json = $.parseJSON(data);
+                json.recordsTotal = json.page.totalElements;
+                json.recordsFiltered = json.page.totalElements;
 
-                    var idx = 0;
-                    json._embedded.persons.forEach(function(item){
-                        var idArr = item._links.self.href.split("/");
-                        json._embedded.persons[idx++].id = idArr[idArr.length-1];
-                    });
-
-                    json.data = json._embedded.persons;
-                    return JSON.stringify(json);
-                }
-            }
-        });
-
-        var editId = "";
-        $("#dataTab tbody").on('click','tr', function(){
-            $("#frm")[0].reset();
-            $("div[id$=ErrMsg]").text("");
-            $(".form-group").removeClass("has-error");
-            editId = $(this).find("td").eq(1).text();
-            $("input[name=id]").val(editId);
-            $.ajax({
-                url: '/api/persons/'+editId,
-                type: 'GET',
-                success: function(d) {
-                    $("#firstName").val(d.firstName);
-                    $("#lastName").val(d.lastName);
-                    $('#modal-default').modal('show');
-                }
-            });
-        });
-
-        $("#chkAll").click(function(){
-            $("input[id^=chk]").prop("checked",$(this).is(":checked"));
-        });
-
-        $("#btnNew").click(function(){
-            editId = "";
-            $("#frm")[0].reset();
-            $("div[id$=ErrMsg]").text("");
-            $(".form-group").removeClass("has-error");
-        });
-
-        $("#btnDel").click(function(){
-            if(confirm('Are you sure you want to delete it?')) {
-                $.each($("input[id^=chk_]"),function(){
-                    if($(this).is(":checked")) {
-                        var delId = $(this).attr("id").replace("chk_","");
-                        $.ajax({
-                            url: '/api/persons/'+delId,
-                            type: 'DELETE'
-                        });
-                    }
+                var idx = 0;
+                json._embedded.persons.forEach(function(item){
+                    var idArr = item._links.self.href.split("/");
+                    json._embedded.persons[idx++].id = idArr[idArr.length-1];
                 });
-                dataTab.draw();
-            }
-        });
 
-        $("#btnSave").click(function(){
-            $("div[id$=ErrMsg]").text("");
-            $(".form-group").removeClass("has-error");
-            var ajaxType = (editId=="")?"POST":"PUT";
-            var ajaxUrl = "/api2/persons/";
-            if(ajaxType=="PUT")
-                ajaxUrl += editId
-            $.ajax({
-                url: ajaxUrl,
-                type: ajaxType,
-                data: $("#frm").serialize(),
-                success: function(d) {
-                    if(d.status=="OK") {
-                        alert("Success!");
-                        $("button[data-dismiss=modal]").click();
-                        dataTab.draw();
-                    } else {
-                        $.each(d.error,function(i,item){
-                            $("#"+item.field+"ErrMsg").text(item.message);
-                            $("#"+item.field+"ErrMsg").parent().addClass("has-error");
-                        });
-                    }
-                }
-            });
+                json.data = json._embedded.persons;
+                return JSON.stringify(json);
+            }
+        }
+    });
+
+    var editId = "";
+    $("#dataTab tbody").on('click','tr', function(){
+        $("#frm")[0].reset();
+        $("div[id$=ErrMsg]").text("");
+        $(".form-group").removeClass("has-error");
+        editId = $(this).find("td").eq(1).text();
+        $("input[name=id]").val(editId);
+        $.ajax({
+            url: '/api/persons/'+editId,
+            type: 'GET',
+            success: function(d) {
+                $("#firstName").val(d.firstName);
+                $("#lastName").val(d.lastName);
+                $('#modal-default').modal('show');
+            }
         });
     });
+
+    $("#chkAll").click(function(){
+        $("input[id^=chk]").prop("checked",$(this).is(":checked"));
+    });
+
+    $("#btnNew").click(function(){
+        editId = "";
+        $("#frm")[0].reset();
+        $("div[id$=ErrMsg]").text("");
+        $(".form-group").removeClass("has-error");
+    });
+
+    $("#btnDel").click(function(){
+        if(confirm('Are you sure you want to delete it?')) {
+            $.each($("input[id^=chk_]"),function(){
+                if($(this).is(":checked")) {
+                    var delId = $(this).attr("id").replace("chk_","");
+                    $.ajax({
+                        url: '/api/persons/'+delId,
+                        type: 'DELETE'
+                    });
+                }
+            });
+            dataTab.draw();
+        }
+    });
+
+    $("#btnSave").click(function(){
+        $("div[id$=ErrMsg]").text("");
+        $(".form-group").removeClass("has-error");
+        var ajaxType = (editId=="")?"POST":"PUT";
+        var ajaxUrl = "/api2/persons/";
+        if(ajaxType=="PUT")
+            ajaxUrl += editId
+        $.ajax({
+            url: ajaxUrl,
+            type: ajaxType,
+            data: $("#frm").serialize(),
+            success: function(d) {
+                if(d.status=="OK") {
+                    alert("Success!");
+                    $("button[data-dismiss=modal]").click();
+                    dataTab.draw();
+                } else {
+                    $.each(d.error,function(i,item){
+                        $("#"+item.field+"ErrMsg").text(item.message);
+                        $("#"+item.field+"ErrMsg").parent().addClass("has-error");
+                    });
+                }
+            }
+        });
+    });
+});
 </script>
 </body>
 </html>

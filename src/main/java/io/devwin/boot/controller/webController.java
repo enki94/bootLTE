@@ -22,20 +22,8 @@ public class webController {
         return "register";
     }
 
-    @RequestMapping("/dashboard")
-    public String dashboard() {
-        return "dashboard";
-    }
-
-    @RequestMapping("/data.html")
+    @RequestMapping("/datatable")
     public String datatable() {
-        return "data";
-    }
-
-    @RequestMapping("/hello")
-    public String hello(Model model, @RequestParam(value = "name", defaultValue = "Unknown", required = false) String name) {
-        String greetings = "Hello, " + name + "!";
-        model.addAttribute("greetings", greetings);
-        return "hello";
+        return "datatable";
     }
 }
