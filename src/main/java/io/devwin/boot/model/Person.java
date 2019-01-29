@@ -1,16 +1,14 @@
 package io.devwin.boot.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
+@Data
 @Entity
-@Getter
-@Setter
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

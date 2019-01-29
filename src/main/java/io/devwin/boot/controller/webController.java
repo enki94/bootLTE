@@ -1,9 +1,7 @@
 package io.devwin.boot.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 public class webController {
     @RequestMapping("/")
     public String index() {
-        return "index";
+        return "redirect:/login";
     }
 
     @RequestMapping("/login")
@@ -26,8 +24,8 @@ public class webController {
         return "register";
     }
 
-    @RequestMapping("/datatable")
+    @RequestMapping("/admin/datatable")
     public String datatable() {
-        return "datatable";
+        return "/admin/datatable";
     }
 }

@@ -25,8 +25,8 @@ public class MemberRepositoryTest {
         for(int i=0; i<100; i++) {
             Member member = new Member();
             member.setUid("user" + i);
-            member.setUpw("pw" + i);
-            member.setUemail("hihi@" + i);
+            member.setPasswd("pw" + i);
+            member.setEmail("hihi@" + i);
             MemberRole role = new MemberRole();
             if(i <= 80) {
                 role.setRoleName("BASIC");

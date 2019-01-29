@@ -1,9 +1,6 @@
 package io.devwin.boot.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,11 +8,9 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Entity
 @EqualsAndHashCode(of = "uid")
-@ToString
 public class Member {
 
     @Id
@@ -26,16 +21,16 @@ public class Member {
     private String uid;
 
     @Column(nullable = false, length=200)
-    private String upw;
+    private String passwd;
 
     @Column(nullable = false, unique = true, length=50)
-    private String uemail;
+    private String email;
 
     @CreationTimestamp
-    private Date regdate;
+    private Date regDate;
 
     @UpdateTimestamp
-    private Date updatedate;
+    private Date updDate;
 
     @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinColumn(name="uid")

@@ -22,7 +22,7 @@ public class MemberController {
     public String create(Member member) {
         MemberRole role = new MemberRole();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        member.setUpw(passwordEncoder.encode(member.getUpw()));
+        member.setPasswd(passwordEncoder.encode(member.getPasswd()));
         role.setRoleName("BASIC");
         member.setRoles(Arrays.asList(role));
         memberRepository.save(member);
