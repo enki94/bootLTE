@@ -1,8 +1,8 @@
 package io.devwin.boot;
 
-import io.devwin.boot.model.Member;
-import io.devwin.boot.model.MemberRole;
-import io.devwin.boot.repository.MemberRepository;
+import io.devwin.bootLTE.model.Member;
+import io.devwin.bootLTE.model.MemberRole;
+import io.devwin.bootLTE.repository.MemberRepository;
 import lombok.extern.java.Log;
 import org.junit.Test;
 import org.junit.runner.RunWith;

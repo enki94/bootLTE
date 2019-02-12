@@ -1,6 +1,6 @@
-package io.devwin.boot.repository;
+package io.devwin.bootLTE.repository;
 
-import io.devwin.boot.model.Person;
+import io.devwin.bootLTE.model.Person;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

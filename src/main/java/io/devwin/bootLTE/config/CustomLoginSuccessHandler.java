@@ -1,4 +1,4 @@
-package io.devwin.boot.config;
+package io.devwin.bootLTE.config;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;

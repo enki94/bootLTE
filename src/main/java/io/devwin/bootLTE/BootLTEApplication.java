@@ -1,14 +1,14 @@
-package io.devwin.boot;
+package io.devwin.bootLTE;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 //@EnableOAuth2Sso
-public class BootApplication {
+public class BootLTEApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BootApplication.class, args);
+        SpringApplication.run(BootLTEApplication.class, args);
     }
 
 }

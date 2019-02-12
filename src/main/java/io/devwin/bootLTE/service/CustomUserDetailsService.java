@@ -1,7 +1,7 @@
-package io.devwin.boot.service;
+package io.devwin.bootLTE.service;
 
-import io.devwin.boot.model.SecurityMember;
-import io.devwin.boot.repository.MemberRepository;
+import io.devwin.bootLTE.model.SecurityMember;
+import io.devwin.bootLTE.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

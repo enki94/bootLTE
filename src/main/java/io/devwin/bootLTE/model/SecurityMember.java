@@ -1,4 +1,4 @@
-package io.devwin.boot.model;
+package io.devwin.bootLTE.model;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

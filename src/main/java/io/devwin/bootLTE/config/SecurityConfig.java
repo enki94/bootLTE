@@ -1,6 +1,6 @@
-package io.devwin.boot.config;
+package io.devwin.bootLTE.config;
 
-import io.devwin.boot.service.CustomUserDetailsService;
+import io.devwin.bootLTE.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

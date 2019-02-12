@@ -1,8 +1,8 @@
-package io.devwin.boot.controller;
+package io.devwin.bootLTE.controller;
 
-import io.devwin.boot.model.Member;
-import io.devwin.boot.model.MemberRole;
-import io.devwin.boot.repository.MemberRepository;
+import io.devwin.bootLTE.model.Member;
+import io.devwin.bootLTE.model.MemberRole;
+import io.devwin.bootLTE.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;

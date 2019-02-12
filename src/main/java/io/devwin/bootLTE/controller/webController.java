@@ -1,4 +1,4 @@
-package io.devwin.boot.controller;
+package io.devwin.bootLTE.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,16 +1,12 @@
-package io.devwin.boot.rest;
+package io.devwin.bootLTE.rest;
 
-import io.devwin.boot.model.Person;
-import io.devwin.boot.repository.PersonRepository;
-import lombok.extern.java.Log;
+import io.devwin.bootLTE.model.Person;
+import io.devwin.bootLTE.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
