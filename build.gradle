@@ -38,6 +38,7 @@ dependencies {
     //webjars
     compile 'org.webjars:bootstrap:4.3.1'
     compile 'org.webjars:font-awesome:5.10.1'
+    compile 'org.webjars:ionicons:2.0.1'
     compile 'org.webjars:AdminLTE:2.4.15'
     compile 'org.webjars:jquery:3.4.1'
     compile 'org.webjars:datatables:1.10.19'
