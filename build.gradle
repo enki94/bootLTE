@@ -22,27 +22,27 @@ dependencies {
     //spring.io
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-mustache'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.session:spring-session-core'
+    compileOnly 'org.projectlombok:lombok'
+    //developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     //spring datatables
     implementation 'com.github.darrachequesne:spring-data-jpa-datatables:5.0.0'
 
     //webjars
-    implementation 'org.webjars:bootstrap:4.3.1'
-    implementation 'org.webjars:font-awesome:5.10.1'
-    implementation 'org.webjars:AdminLTE:2.4.15'
-    implementation 'org.webjars:jquery:3.4.1'
-
-    implementation 'org.webjars.bower:datatables.net-bs:2.1.1'
-    implementation 'org.webjars:jQuery-slimScroll:1.3.8'
-    implementation 'org.webjars:fastclick:1.0.6'
-    implementation 'org.webjars:jquery-form:4.2.1'
-    implementation 'org.webjars:jquery-validation:1.17.0-1'
-    
-    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.h2database:h2'
-    compile 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+    compile 'org.webjars:bootstrap:4.3.1'
+    compile 'org.webjars:font-awesome:5.10.1'
+    compile 'org.webjars:AdminLTE:2.4.15'
+    compile 'org.webjars:jquery:3.4.1'
+    compile 'org.webjars:datatables:1.10.19'
+    compile 'org.webjars:jQuery-slimScroll:1.3.8'
+    compile 'org.webjars:fastclick:1.0.6'
+    compile 'org.webjars:jquery-form:4.2.2'
+    compile 'org.webjars:jquery-validation:1.19.0'
 }
